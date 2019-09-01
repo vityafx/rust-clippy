@@ -501,7 +501,7 @@ pub fn register_plugins(reg: &mut rustc_driver::plugin::Registry<'_>, conf: &Con
     reg.register_late_lint_pass(box temporary_assignment::TemporaryAssignment);
     reg.register_late_lint_pass(box transmute::Transmute);
     reg.register_late_lint_pass(
-        box cognitive_complexity::CognitiveComplexity::new(conf.cognitive_complexity_threshold)
+        box cognitive_complexity::CognitiveComplexity::new(conf.cognitive_complexity_threshold, conf.cognitive_complexity_verbosity)
     );
     reg.register_late_lint_pass(box escape::BoxedLocal{too_large_for_stack: conf.too_large_for_stack});
     reg.register_early_lint_pass(box misc_early::MiscEarlyLints);

@@ -114,6 +114,29 @@ pub fn span_note_and_lint<'a, T: LintContext>(
     db.docs_link(lint);
 }
 
+/// Like `span_note_and_lint` but with multiple note sections.
+///
+/// The note messages are provided for bounded to spans.
+///
+pub fn span_notes_and_lint<'a, T: LintContext>(
+    cx: &'a T,
+    lint: &'static Lint,
+    span: Span,
+    msg: &str,
+    notes: Vec<(Span, String)>,
+) {
+    let mut db = DiagnosticWrapper(cx.struct_span_lint(lint, span, msg));
+    for note in &notes {
+        if note.0 == span {
+            db.0.note(&note.1);
+        } else {
+            db.0.span_note(note.0, &note.1);
+        }
+    }
+    db.docs_link(lint);
+}
+
+
 pub fn span_lint_and_then<'a, T: LintContext, F>(cx: &'a T, lint: &'static Lint, sp: Span, msg: &str, f: F)
 where
     F: for<'b> FnOnce(&mut DiagnosticBuilder<'b>),
